@@ -63,6 +63,7 @@ public class MainMenuController implements Initializable {
                 int port = Integer.parseInt(portBox.getText());
                 ChatClient client = new ChatClient(ip, port);
                 started = true;
+                transitionToChat(client);
             } catch(Exception e) {
                 System.out.println(e);
             }
@@ -72,22 +73,25 @@ public class MainMenuController implements Initializable {
                 int port = Integer.parseInt(portBox.getText());
                 ChatServer server = new ChatServer(port);
                 server.waitForConnection();
-                started = true;
+                transitionToChat(server);
             } catch(Exception e) {
                 System.out.println(e);
             }
         }
-        
-        // Switch scene if connected.
-        if (started) {
-            try {
+    }
+    
+    public void transitionToChat(ChatEntity chatEntity) {
+        try {
             Stage stage = (Stage)startButton.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("ChatScreen.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatScreen.fxml"));
+            Parent root = loader.load();
+            ChatScreenController controller = (ChatScreenController)loader.getController();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            } catch (Exception e) {
-                System.out.println(e);
-            }
+
+            chatEntity.setController(controller);
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
     

@@ -7,10 +7,8 @@ package networkchat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -20,13 +18,14 @@ import javafx.scene.control.TextArea;
  *
  * @author Jordan
  */
-public class ChatServer {
+public class ChatServer extends ChatEntity {
 
     ServerSocket serverSocket;
     Socket socket;
     InputStreamReader IR;
     BufferedReader BR;
     TextArea chatWindow;
+    ChatScreenController controller;
 
     public ChatServer(int port) throws Exception {
         System.out.println("Starting server on port " + port);
@@ -42,20 +41,6 @@ public class ChatServer {
                 // Blocks while waiting for connection
                 Socket socket = serverSocket.accept();
                 return socket;
-                    
-//                String output;
-//                while ((output = BR.readLine()) != null) {
-//                    final String value = output;
-//                    Platform.runLater(new Runnable() {
-//                        
-//                        @Override
-//                        public void run() {
-//                            // Repeats 
-//                            System.out.println(value);
-//                        }
-//                    });
-//                }
-//                return null;
             }
         };
         
@@ -71,7 +56,6 @@ public class ChatServer {
                     socket = task.getValue();
                     IR = new InputStreamReader(socket.getInputStream());
                     BR = new BufferedReader(IR);
-                    System.out.println("Client connected 1");
                     connected();
                 } catch (Exception e) {
                     System.out.println(e);
@@ -80,11 +64,25 @@ public class ChatServer {
         });
     }
     
+    public void setController(ChatScreenController controller) {
+        this.controller = controller;
+    }
+    
     public void connected() {
-        this.chatWindow = ChatScreenController.getChatWindow();
-        System.out.println("Client connected 2");
-        System.out.println(chatWindow);
-        chatWindow.appendText("\nClient has connected.");
-        
+        controller.addLine("Client has connected.");
     }
 }
+
+//                String output;
+//                while ((output = BR.readLine()) != null) {
+//                    final String value = output;
+//                    Platform.runLater(new Runnable() {
+//                        
+//                        @Override
+//                        public void run() {
+//                            // Repeats 
+//                            System.out.println(value);
+//                        }
+//                    });
+//                }
+//                return null;

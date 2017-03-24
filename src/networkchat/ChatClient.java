@@ -16,19 +16,21 @@ import javafx.concurrent.Task;
  *
  * @author Jordan
  */
-public class ChatClient {
-     public ChatClient(String ip, int port) throws Exception {
+public class ChatClient extends ChatEntity {
+    ChatScreenController controller;
+            
+    public ChatClient(String ip, int port) throws Exception {
         Socket socket = new Socket(ip, port);
         // Output
         PrintStream PS = new PrintStream(socket.getOutputStream());
         PS.println("Hello to Server from Client");
 
         // Input
-//        InputStreamReader IR = new InputStreamReader(socket.getInputStream());
-//        BufferedReader BR = new BufferedReader(IR);
-//
-//        String message = BR.readLine();
-//        System.out.println(message);
+        //        InputStreamReader IR = new InputStreamReader(socket.getInputStream());
+        //        BufferedReader BR = new BufferedReader(IR);
+        //
+        //        String message = BR.readLine();
+        //        System.out.println(message);
     }
      
 //     public void connect() throws Exception {
@@ -62,4 +64,7 @@ public class ChatClient {
 //        
 //        new Thread(task).start();
 //    }
+    public void setController(ChatScreenController controller) {
+        this.controller = controller;
+    }
 }

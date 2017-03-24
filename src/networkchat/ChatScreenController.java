@@ -26,7 +26,7 @@ public class ChatScreenController implements Initializable {
     
     // Chat Window
     @FXML
-    private static TextArea chatWindow;
+    private TextArea chatWindow;
     @FXML
     private TextField chatBox;
     
@@ -55,13 +55,13 @@ public class ChatScreenController implements Initializable {
     // Sends the message in the chat box.
     public void sendMessage() {
         if (chatBox.getText().trim().length() > 0) {
-            chatWindow.appendText("\nJordan: " + chatBox.getText());
+            addLine("Jordan: " + chatBox.getText());
             chatBox.setText("");
         }
     }
     
-    public static TextArea getChatWindow() {
-        return chatWindow;
+    public void addLine(String input) {
+        chatWindow.appendText("\n" + input);
     }
     
     
