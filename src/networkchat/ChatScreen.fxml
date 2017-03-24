@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane id="AnchorPane" prefHeight="560.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="networkchat.ChatScreenController">
+   <children>
+      <BorderPane layoutX="1.0" layoutY="-2.0" prefHeight="560.0" prefWidth="520.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <SplitPane dividerPositions="0.8938223938223938" prefHeight="19.0" prefWidth="520.0" BorderPane.alignment="CENTER">
+               <items>
+                  <TextField fx:id="chatBox" onKeyPressed="#keyPressChatBox" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#clickSubmitButton" prefWidth="43.0" text="Send" />
+               </items>
+            </SplitPane>
+         </bottom>
+         <center>
+            <TextArea fx:id="chatWindow" editable="false" prefHeight="200.0" prefWidth="200.0" text="Jordan: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed sem magna. In interdum mattis lacus, ut feugiat turpis pretium et. Pellentesque sed velit ut nisl viverra lobortis eu id metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc at ex hendrerit, condimentum nibh quis, facilisis magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin quis neque ut velit pellentesque rhoncus at non purus. Proin sit amet euismod augue. Vestibulum ullamcorper massa bibendum sapien tincidunt, nec mollis odio sagittis. Donec semper dictum tincidunt. Quisque vel ligula nec turpis elementum vulputate congue eu ipsum. Vestibulum interdum et ex non vehicula. Vivamus aliquet eros et venenatis condimentum. Donec aliquam euismod nulla vel tempus.\n fdsfsdf" wrapText="true" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>
