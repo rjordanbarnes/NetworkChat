@@ -9,17 +9,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 
 
 public class ChatScreenController implements Initializable {
@@ -29,6 +23,9 @@ public class ChatScreenController implements Initializable {
     private TextArea chatWindow;
     @FXML
     private TextField chatBox;
+    
+    // The Server/Client object
+    ChatEntity chatEntity;
     
     
     //// EVENT METHODS ////
@@ -55,13 +52,19 @@ public class ChatScreenController implements Initializable {
     // Sends the message in the chat box.
     public void sendMessage() {
         if (chatBox.getText().trim().length() > 0) {
-            addLine("Jordan: " + chatBox.getText());
+            String message = chatBox.getText();
+            chatEntity.sendMessage(message);
+            addLine("Jordan: " + message);
             chatBox.setText("");
         }
     }
     
     public void addLine(String input) {
         chatWindow.appendText("\n" + input);
+    }
+    
+    public void setEntity(ChatEntity chatEntity) {
+        this.chatEntity = chatEntity;
     }
     
     

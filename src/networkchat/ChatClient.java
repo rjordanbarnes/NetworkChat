@@ -18,12 +18,13 @@ import javafx.concurrent.Task;
  */
 public class ChatClient extends ChatEntity {
     ChatScreenController controller;
+    PrintStream PS;
             
     public ChatClient(String ip, int port) throws Exception {
         Socket socket = new Socket(ip, port);
         // Output
-        PrintStream PS = new PrintStream(socket.getOutputStream());
-        PS.println("Hello to Server from Client");
+        PS = new PrintStream(socket.getOutputStream());
+        sendMessage("Hello to Server from Client");
 
         // Input
         //        InputStreamReader IR = new InputStreamReader(socket.getInputStream());
@@ -66,5 +67,9 @@ public class ChatClient extends ChatEntity {
 //    }
     public void setController(ChatScreenController controller) {
         this.controller = controller;
+    }
+    
+    public void sendMessage(String message) {
+        PS.println(message);
     }
 }

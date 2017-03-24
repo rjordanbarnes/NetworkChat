@@ -7,8 +7,10 @@ package networkchat;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -26,6 +28,7 @@ public class ChatServer extends ChatEntity {
     BufferedReader BR;
     TextArea chatWindow;
     ChatScreenController controller;
+    PrintStream PS;
 
     public ChatServer(int port) throws Exception {
         System.out.println("Starting server on port " + port);
@@ -56,7 +59,8 @@ public class ChatServer extends ChatEntity {
                     socket = task.getValue();
                     IR = new InputStreamReader(socket.getInputStream());
                     BR = new BufferedReader(IR);
-                    connected();
+                    PS = new PrintStream(socket.getOutputStream());
+                    connectionEstablished();
                 } catch (Exception e) {
                     System.out.println(e);
                 }
@@ -68,21 +72,33 @@ public class ChatServer extends ChatEntity {
         this.controller = controller;
     }
     
-    public void connected() {
+    public void connectionEstablished() {
         controller.addLine("Client has connected.");
+        
+        // Task that runs and 
+        final Task<Socket> task = new Task<Socket>() {
+            @Override
+            protected Socket call() throws Exception {
+                String output;
+                while ((output = BR.readLine()) != null) {
+                    final String value = output;
+                    Platform.runLater(new Runnable() {
+                        
+                        @Override
+                        public void run() {
+                            // Repeats 
+                            controller.addLine(value);
+                        }
+                    });
+                }
+                return null;
+            }
+        };
+        
+        new Thread(task).start();
+    }
+    
+    public void sendMessage(String message) {
+        PS.println(message);
     }
 }
-
-//                String output;
-//                while ((output = BR.readLine()) != null) {
-//                    final String value = output;
-//                    Platform.runLater(new Runnable() {
-//                        
-//                        @Override
-//                        public void run() {
-//                            // Repeats 
-//                            System.out.println(value);
-//                        }
-//                    });
-//                }
-//                return null;
