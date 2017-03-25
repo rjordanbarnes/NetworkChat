@@ -57,7 +57,6 @@ public class MainMenuController implements Initializable {
     // Disables Start button if Name, IP, or Port are empty.
     @FXML
     private void checkFields(KeyEvent event) {
-        System.out.println(nameBox.getText().trim().length());
         if (nameBox.getText().trim().length() < 1 ||
             ipBox.getText().trim().length() < 1 ||
             portBox.getText().trim().length() < 1) {

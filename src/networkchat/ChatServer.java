@@ -43,7 +43,7 @@ public class ChatServer extends ChatEntity {
 
     // Waits for a connection to be made.
     public void waitForConnection() throws Exception {
-        controller.addLine("Starting server on port " + port, false);
+        controller.addLine("Server started on port " + port + ".", false);
         final Task<Socket> task = new Task<Socket>() {
             @Override
             protected Socket call() throws Exception {

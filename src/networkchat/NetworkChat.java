@@ -23,8 +23,10 @@ public class NetworkChat extends Application {
         
         Scene scene = new Scene(root);
         
+        stage.setTitle("Network Chat");
         stage.setScene(scene);
         stage.show();
+        root.requestFocus();
     }
 
     /**
