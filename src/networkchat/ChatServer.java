@@ -47,10 +47,12 @@ public class ChatServer extends ChatEntity {
         final Task<Socket> task = new Task<Socket>() {
             @Override
             protected Socket call() throws Exception {
-                
-                // Blocks while waiting for connection
-                Socket socket = serverSocket.accept();
-                return socket;
+                // Continuously waits for new connections with new sockets.
+                while (true) {
+                    // Blocks while waiting for connection
+                    Socket socket = serverSocket.accept();
+                    return socket;
+                }
             }
         };
         

@@ -35,7 +35,6 @@ public class NetworkChat extends Application {
         // Make sure program closes entirely when X is pressed.
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e){
-                System.out.println("test");  
                 try {
                     Platform.exit();
                     System.exit(0);
