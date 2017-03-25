@@ -16,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 
@@ -39,16 +40,31 @@ public class MainMenuController implements Initializable {
     
     // Main Menu
     
+    // Clicking the Host toggle
     @FXML
     private void clickHostToggle(ActionEvent event) {
         ipBox.setDisable(true);
         startButton.setText("Start");
     }
     
+    // Clicking the Join toggle
     @FXML
     private void clickJoinToggle(ActionEvent event) {
         ipBox.setDisable(false);
         startButton.setText("Connect");
+    }
+    
+    // Disables Start button if Name, IP, or Port are empty.
+    @FXML
+    private void checkFields(KeyEvent event) {
+        System.out.println(nameBox.getText().trim().length());
+        if (nameBox.getText().trim().length() < 1 ||
+            ipBox.getText().trim().length() < 1 ||
+            portBox.getText().trim().length() < 1) {
+            startButton.setDisable(true);
+        } else {
+            startButton.setDisable(false);
+        }
     }
     
     // Clicking the Start button

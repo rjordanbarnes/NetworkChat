@@ -11,16 +11,16 @@
    <children>
       <Pane prefHeight="560.0" prefWidth="520.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField fx:id="nameBox" layoutX="64.0" layoutY="36.0" promptText="Name" text="Jordan" />
-            <ToggleButton fx:id="hostToggle" layoutX="202.0" layoutY="161.0" mnemonicParsing="false" onAction="#clickHostToggle" selected="true" text="Host">
+            <TextField fx:id="nameBox" layoutX="64.0" layoutY="36.0" onKeyReleased="#checkFields" promptText="Name" text="User" />
+            <ToggleButton fx:id="hostToggle" layoutX="202.0" layoutY="161.0" mnemonicParsing="false" onAction="#clickHostToggle" text="Host">
                <toggleGroup>
                   <ToggleGroup fx:id="hostJoinGroup" />
                </toggleGroup>
             </ToggleButton>
-            <ToggleButton fx:id="joinToggle" layoutX="241.0" layoutY="161.0" mnemonicParsing="false" onAction="#clickJoinToggle" text="Join" toggleGroup="$hostJoinGroup" />
-            <TextField fx:id="ipBox" layoutX="168.0" layoutY="201.0" promptText="IP" text="localhost" />
-            <TextField fx:id="portBox" layoutX="317.0" layoutY="201.0" prefHeight="25.0" prefWidth="50.0" promptText="Port" text="9999" />
-            <Button fx:id="startButton" layoutX="217.0" layoutY="245.0" mnemonicParsing="false" onAction="#clickStartButton" text="Start" />
+            <ToggleButton fx:id="joinToggle" layoutX="241.0" layoutY="161.0" mnemonicParsing="false" onAction="#clickJoinToggle" selected="true" text="Join" toggleGroup="$hostJoinGroup" />
+            <TextField fx:id="ipBox" layoutX="168.0" layoutY="201.0" onKeyReleased="#checkFields" promptText="IP" text="localhost" />
+            <TextField fx:id="portBox" layoutX="317.0" layoutY="201.0" onKeyReleased="#checkFields" prefHeight="25.0" prefWidth="50.0" promptText="Port" text="9999" />
+            <Button fx:id="startButton" layoutX="217.0" layoutY="245.0" mnemonicParsing="false" onAction="#clickStartButton" text="Connect" />
          </children>
       </Pane>
    </children>
