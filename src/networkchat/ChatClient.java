@@ -18,6 +18,8 @@ import javafx.concurrent.Task;
  */
 public class ChatClient extends ChatEntity {
     ChatScreenController controller;
+    
+    Socket socket;
     PrintStream PS;
     InputStreamReader IR;
     BufferedReader BR;
@@ -26,8 +28,25 @@ public class ChatClient extends ChatEntity {
     boolean knowServerUsername = false;
             
     public ChatClient(String ip, int port, String username) throws Exception {
-        Socket socket = new Socket(ip, port);
+        socket = new Socket(ip, port);
         this.username = username;
+        
+        // Output
+        PS = new PrintStream(socket.getOutputStream());
+        // Input
+        IR = new InputStreamReader(socket.getInputStream());
+        BR = new BufferedReader(IR);
+        
+        // Send username to server and begin listening.
+        PS.println(username);
+        listenForChat();
+    }
+    
+    // Used by ChatServer to create different clients for each connected user.
+    public ChatClient(Socket socket, String username, ChatScreenController controller) throws Exception {
+        this.socket = socket;
+        this.username = username;
+        this.controller = controller;
         
         // Output
         PS = new PrintStream(socket.getOutputStream());
@@ -57,7 +76,7 @@ public class ChatClient extends ChatEntity {
                             if (knowServerUsername) {
                                 controller.addLine(value);
                             } else {
-                                controller.addLine("You've connected to " + value + ".", false);
+                                controller.addLine("You've connected to " + value + ".");
                                 knowServerUsername = true;
                             }
                         }
@@ -76,7 +95,7 @@ public class ChatClient extends ChatEntity {
     }
     
     @Override
-    public void sendMessage(String message) {
+    public void sendChatMessage(String message) {
         controller.addLine(username + ": " + message);
         PS.println(username + ": " + message);
     }
