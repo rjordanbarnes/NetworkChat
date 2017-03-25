@@ -71,8 +71,8 @@ public class MainMenuController implements Initializable {
             // Host a server
             try {
                 ChatServer server = new ChatServer(port, username);
-                server.waitForConnection();
                 transitionToChat(server);
+                server.waitForConnection();
             } catch(Exception e) {
                 System.out.println(e);
             }

@@ -29,16 +29,21 @@ public class ChatServer extends ChatEntity {
     TextArea chatWindow;
     ChatScreenController controller;
     PrintStream PS;
+    
+    int port;
     String username;
+    boolean knowClientUsername;
 
     public ChatServer(int port, String username) throws Exception {
-        System.out.println("Starting server on port " + port);
         serverSocket = new ServerSocket(port);
+        this.port = port;
         this.username = username;
+        
     }
 
+    // Waits for a connection to be made.
     public void waitForConnection() throws Exception {
-        
+        controller.addLine("Starting server on port " + port, false);
         final Task<Socket> task = new Task<Socket>() {
             @Override
             protected Socket call() throws Exception {
@@ -62,20 +67,17 @@ public class ChatServer extends ChatEntity {
                     IR = new InputStreamReader(socket.getInputStream());
                     BR = new BufferedReader(IR);
                     PS = new PrintStream(socket.getOutputStream());
-                    connectionEstablished();
+                    
+                    // Send username to client and begin listening.
+                    PS.println(username);
+                    listenForChat();
                 } catch (Exception e) {
                     System.out.println(e);
                 }
             }
         });
     }
-    
-    // Notify user that client has connected and to start listening for chat.
-    public void connectionEstablished() {
-        controller.addLine("Client has connected.");
-        listenForChat();
-    }
-    
+
     // Listens for chat and adds new messages to the screen.
     public void listenForChat() {
         
@@ -87,10 +89,16 @@ public class ChatServer extends ChatEntity {
                     final String value = output;
                     Platform.runLater(new Runnable() {
                         
+                        // Method repeats many times a second.
                         @Override
                         public void run() {
-                            // Repeats 
-                            controller.addLine(value);
+                            // Client will always send their username as first message.
+                            if (knowClientUsername) {
+                                controller.addLine(value);
+                            } else {
+                                controller.addLine(value + " has connected.");
+                                knowClientUsername = true;
+                            }
                         }
                     });
                 }

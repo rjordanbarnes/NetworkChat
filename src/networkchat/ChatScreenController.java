@@ -62,6 +62,14 @@ public class ChatScreenController implements Initializable {
         chatWindow.appendText("\n" + input);
     }
     
+    public void addLine(String input, Boolean newLine) {
+        if (newLine) {
+            addLine(input);
+        } else {
+            chatWindow.appendText(input);
+        }
+    }
+    
     public void setEntity(ChatEntity chatEntity) {
         this.chatEntity = chatEntity;
     }

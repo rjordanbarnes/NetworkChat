@@ -21,7 +21,9 @@ public class ChatClient extends ChatEntity {
     PrintStream PS;
     InputStreamReader IR;
     BufferedReader BR;
+    
     String username;
+    boolean knowServerUsername = false;
             
     public ChatClient(String ip, int port, String username) throws Exception {
         Socket socket = new Socket(ip, port);
@@ -33,11 +35,13 @@ public class ChatClient extends ChatEntity {
         IR = new InputStreamReader(socket.getInputStream());
         BR = new BufferedReader(IR);
         
+        // Send username to server and begin listening.
+        PS.println(username);
         listenForChat();
     }
     
     public void listenForChat() {
-        // Listens for chat and add its to the screen.
+        // Listens for chat and add it to the screen.
         final Task<Socket> task = new Task<Socket>() {
             @Override
             protected Socket call() throws Exception {
@@ -46,10 +50,16 @@ public class ChatClient extends ChatEntity {
                     final String value = output;
                     Platform.runLater(new Runnable() {
                         
+                        // Method repeats many times a second.
                         @Override
                         public void run() {
-                            // Repeats 
-                            controller.addLine(value);
+                            // Server will always send their username as first message.
+                            if (knowServerUsername) {
+                                controller.addLine(value);
+                            } else {
+                                controller.addLine("You've connected to " + value + ".", false);
+                                knowServerUsername = true;
+                            }
                         }
                     });
                 }

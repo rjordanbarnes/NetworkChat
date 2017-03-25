@@ -19,7 +19,7 @@
             </SplitPane>
          </bottom>
          <center>
-            <TextArea fx:id="chatWindow" editable="false" prefHeight="200.0" prefWidth="200.0" text="Jordan: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed sem magna. In interdum mattis lacus, ut feugiat turpis pretium et. Pellentesque sed velit ut nisl viverra lobortis eu id metus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nunc at ex hendrerit, condimentum nibh quis, facilisis magna. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin quis neque ut velit pellentesque rhoncus at non purus. Proin sit amet euismod augue. Vestibulum ullamcorper massa bibendum sapien tincidunt, nec mollis odio sagittis. Donec semper dictum tincidunt. Quisque vel ligula nec turpis elementum vulputate congue eu ipsum. Vestibulum interdum et ex non vehicula. Vivamus aliquet eros et venenatis condimentum. Donec aliquam euismod nulla vel tempus.\n fdsfsdf" wrapText="true" BorderPane.alignment="CENTER" />
+            <TextArea fx:id="chatWindow" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
    </children>
