@@ -55,13 +55,14 @@ public class MainMenuController implements Initializable {
     @FXML
     private void clickStartButton(ActionEvent event) {
         boolean started = false;
+        String ip = ipBox.getText();
+        int port = Integer.parseInt(portBox.getText());
+        String username = nameBox.getText();
 
         if (startButton.getText().equals("Connect")) {
             // Connect to a server
             try {
-                String ip = ipBox.getText();
-                int port = Integer.parseInt(portBox.getText());
-                ChatClient client = new ChatClient(ip, port);
+                ChatClient client = new ChatClient(ip, port, username);
                 transitionToChat(client);
             } catch(Exception e) {
                 System.out.println(e);
@@ -69,8 +70,7 @@ public class MainMenuController implements Initializable {
         } else {
             // Host a server
             try {
-                int port = Integer.parseInt(portBox.getText());
-                ChatServer server = new ChatServer(port);
+                ChatServer server = new ChatServer(port, username);
                 server.waitForConnection();
                 transitionToChat(server);
             } catch(Exception e) {

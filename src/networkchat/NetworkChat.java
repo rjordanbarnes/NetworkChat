@@ -33,5 +33,4 @@ public class NetworkChat extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
 }

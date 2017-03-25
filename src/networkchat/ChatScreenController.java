@@ -54,7 +54,6 @@ public class ChatScreenController implements Initializable {
         if (chatBox.getText().trim().length() > 0) {
             String message = chatBox.getText();
             chatEntity.sendMessage(message);
-            addLine("Jordan: " + message);
             chatBox.setText("");
         }
     }

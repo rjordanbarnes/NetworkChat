@@ -29,10 +29,12 @@ public class ChatServer extends ChatEntity {
     TextArea chatWindow;
     ChatScreenController controller;
     PrintStream PS;
+    String username;
 
-    public ChatServer(int port) throws Exception {
+    public ChatServer(int port, String username) throws Exception {
         System.out.println("Starting server on port " + port);
         serverSocket = new ServerSocket(port);
+        this.username = username;
     }
 
     public void waitForConnection() throws Exception {
@@ -68,14 +70,15 @@ public class ChatServer extends ChatEntity {
         });
     }
     
-    public void setController(ChatScreenController controller) {
-        this.controller = controller;
-    }
-    
+    // Notify user that client has connected and to start listening for chat.
     public void connectionEstablished() {
         controller.addLine("Client has connected.");
+        listenForChat();
+    }
+    
+    // Listens for chat and adds new messages to the screen.
+    public void listenForChat() {
         
-        // Task that runs and 
         final Task<Socket> task = new Task<Socket>() {
             @Override
             protected Socket call() throws Exception {
@@ -98,7 +101,14 @@ public class ChatServer extends ChatEntity {
         new Thread(task).start();
     }
     
+    @Override
+    public void setController(ChatScreenController controller) {
+        this.controller = controller;
+    }
+    
+    @Override
     public void sendMessage(String message) {
-        PS.println(message);
+        controller.addLine(username + ": " + message);
+        PS.println(username + ": " + message);
     }
 }
