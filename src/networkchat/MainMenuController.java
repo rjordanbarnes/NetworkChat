@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
@@ -35,6 +36,8 @@ public class MainMenuController implements Initializable {
     private TextField portBox;
     @FXML
     private Button startButton;
+    @FXML
+    private Label errorLabel;
     
     //// EVENT METHODS ////
     
@@ -81,6 +84,7 @@ public class MainMenuController implements Initializable {
                 ChatClient client = new ChatClient(ip, port, username);
                 transitionToChat(client);
             } catch(Exception e) {
+                errorLabel.setText("Unable to connect");
                 System.out.println(e);
             }
         } else {
