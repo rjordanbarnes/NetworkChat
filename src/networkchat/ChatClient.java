@@ -42,9 +42,9 @@ public class ChatClient extends ChatEntity {
     
     public void listenForChat() {
         // Listens for chat and add it to the screen.
-        final Task<Socket> task = new Task<Socket>() {
+        final Task<Void> task = new Task<Void>() {
             @Override
-            protected Socket call() throws Exception {
+            protected Void call() throws Exception {
                 String output;
                 while ((output = BR.readLine()) != null) {
                     final String value = output;

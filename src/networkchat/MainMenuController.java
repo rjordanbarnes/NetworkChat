@@ -54,6 +54,7 @@ public class MainMenuController implements Initializable {
     // Clicking the Start button
     @FXML
     private void clickStartButton(ActionEvent event) {
+        
         boolean started = false;
         String ip = ipBox.getText();
         int port = Integer.parseInt(portBox.getText());
