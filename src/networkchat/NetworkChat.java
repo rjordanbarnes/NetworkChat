@@ -6,10 +6,13 @@
 package networkchat;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  *
@@ -26,7 +29,21 @@ public class NetworkChat extends Application {
         stage.setTitle("Network Chat");
         stage.setScene(scene);
         stage.show();
+        // Clear focus
         root.requestFocus();
+        
+        // Make sure program closes entirely when X is pressed.
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent e){
+                System.out.println("test");  
+                try {
+                    Platform.exit();
+                    System.exit(0);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
