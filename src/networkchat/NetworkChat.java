@@ -32,7 +32,7 @@ public class NetworkChat extends Application {
         // Clear focus
         root.requestFocus();
         
-        // Make sure program closes entirely when X is pressed.
+        // Make sure program and threads close entirely when X is pressed.
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent e){
                 try {
