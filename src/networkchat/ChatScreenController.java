@@ -24,8 +24,8 @@ public class ChatScreenController implements Initializable {
     @FXML
     private TextField chatBox;
     
-    // The Server/Client object
-    ChatEntity chatEntity;
+    // The Client object
+    ChatClient chatClient;
     
     
     //// EVENT METHODS ////
@@ -53,7 +53,7 @@ public class ChatScreenController implements Initializable {
     public void sendMessage() {
         if (chatBox.getText().trim().length() > 0) {
             String message = chatBox.getText();
-            chatEntity.sendChatMessage(message);
+            chatClient.sendChatMessage(message);
             chatBox.setText("");
         }
     }
@@ -66,8 +66,8 @@ public class ChatScreenController implements Initializable {
         }
     }
     
-    public void setEntity(ChatEntity chatEntity) {
-        this.chatEntity = chatEntity;
+    public void setEntity(ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
     
     

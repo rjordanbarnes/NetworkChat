@@ -5,9 +5,12 @@
  */
 package networkchat;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -17,26 +20,28 @@ import javafx.scene.control.TextArea;
  *
  * @author Jordan
  */
-public class ChatServer extends ChatEntity {
+public class ChatServer {
 
     ServerSocket serverSocket;
+    Socket socket;
     
     // Make an array of ChatClients
-    ArrayList<ChatClient> clients;
+    ArrayList<Connection> clients;
 
     TextArea chatWindow;
     ChatScreenController controller;
-    
-    
-    int port;
-    String username;
-    boolean knowClientUsername;
+
 
     public ChatServer(int port, String username) throws Exception {
         serverSocket = new ServerSocket(port);
-        this.port = port;
-        this.username = username;
-        clients = new ArrayList<ChatClient>();
+        socket = new Socket("localhost", port);
+        
+        // Creates a list of client connections and creates the first one as the server itself.
+        clients = new ArrayList<Connection>();
+        clients.add(new Connection(socket));
+        
+        // Starts waiting for a connection.
+        waitForConnection();
     }
 
     // Waits for a connection to be made.
@@ -67,7 +72,7 @@ public class ChatServer extends ChatEntity {
            public void handle(WorkerStateEvent t) {
                try {
                    Socket socket = task.getValue();
-                   clients.add(new ChatClient(socket, username, controller));
+                   clients.add(new Connection(socket));
                    
                    // Wait for another connection on a new thread.
                    waitForConnection();
@@ -77,16 +82,64 @@ public class ChatServer extends ChatEntity {
            }
        });
     }
-
-    @Override
-    public void setController(ChatScreenController controller) {
-        this.controller = controller;
+    
+    public void broadcastMessage(Message message) {
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients.get(i) != null) {
+                clients.get(i).sendMessage(message);
+            }
+        }
     }
     
-    @Override
-    public void sendChatMessage(Message message) {
-        for (int i = 0; i < clients.size(); i++) {
-            clients.get(i).sendChatMessage(message);
+    public class Connection {
+        private Socket socket;
+        private ObjectOutputStream outStream;
+        private ObjectInputStream inStream;
+
+        Connection(Socket socket) {
+            this.socket = socket;
+            try {
+            // Output
+            outStream = new ObjectOutputStream(socket.getOutputStream());
+            // Input
+            inStream = new ObjectInputStream(socket.getInputStream());
+            listen();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+
+        private void listen() {
+             // Listens for chat and add it to the screen.
+            final Task<Void> task = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    Message input;
+                    while ((input = (Message)inStream.readObject()) != null) {
+                        final Message message = input;
+                        Platform.runLater(new Runnable() {
+                            // Broadcasts the received message whenever one is received/
+                            @Override
+                            public void run() {
+                                broadcastMessage(message);
+                            }
+                        });
+                    }
+                    return null;
+                }
+            };
+
+            new Thread(task).start();
+        }
+        
+        // Sends a message to this connection's outstream.
+        public void sendMessage(Message message) {
+            try {
+            outStream.writeObject(message);
+            outStream.flush();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
 }

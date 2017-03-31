@@ -77,30 +77,23 @@ public class MainMenuController implements Initializable {
         String ip = ipBox.getText();
         int port = Integer.parseInt(portBox.getText());
         String username = nameBox.getText();
-
-        if (startButton.getText().equals("Connect")) {
-            // Connect to a server
-            try {
-                ChatClient client = new ChatClient(ip, port, username);
-                transitionToChat(client);
-            } catch(Exception e) {
-                errorLabel.setText("Unable to connect");
-                System.out.println(e);
-            }
-        } else {
-            // Host a server
-            try {
+        
+        try {
+            if (startButton.getText().equals("Host")) {
                 ChatServer server = new ChatServer(port, username);
-                transitionToChat(server);
-                server.waitForConnection();
-            } catch(Exception e) {
-                System.out.println(e);
             }
+            
+            ChatClient client = new ChatClient(ip, port, username);
+            
+            transitionToChat(client);
+        } catch(Exception e) {
+            errorLabel.setText("Unable to connect");
+            System.out.println(e);
         }
     }
     
     // Sets the scene to the Chat Screen. Associates the Server/Client with the new controller.
-    public void transitionToChat(ChatEntity chatEntity) {
+    public void transitionToChat(ChatClient chatClient) {
         try {
             // Transition to new scene.
             Stage stage = (Stage)startButton.getScene().getWindow();
@@ -112,7 +105,7 @@ public class MainMenuController implements Initializable {
             
             // Associate the server or client with the new controller.
             controller.setEntity(chatEntity);
-            chatEntity.setController(controller);
+            chatClient.setController(controller);
         } catch (Exception e) {
             System.out.println(e);
         }

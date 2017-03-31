@@ -15,7 +15,7 @@ import javafx.concurrent.Task;
  *
  * @author Jordan
  */
-public class ChatClient extends ChatEntity {
+public class ChatClient {
     ChatScreenController controller;
     
     Socket socket;
@@ -34,24 +34,10 @@ public class ChatClient extends ChatEntity {
         // Input
         inStream = new ObjectInputStream(socket.getInputStream());
 
-        listenForChat();
+        listen();
     }
     
-    // Used by ChatServer to create different clients for each connected user.
-    public ChatClient(Socket socket, String username, ChatScreenController controller) throws Exception {
-        this.socket = socket;
-        this.username = username;
-        this.controller = controller;
-        
-        // Output
-        outStream = new ObjectOutputStream(socket.getOutputStream());
-        // Input
-        inStream = new ObjectInputStream(socket.getInputStream());
-        
-        listenForChat();
-    }
-    
-    public void listenForChat() {
+    public void listen() {
         // Listens for chat and add it to the screen.
         final Task<Void> task = new Task<Void>() {
             @Override
@@ -84,12 +70,10 @@ public class ChatClient extends ChatEntity {
         }
     }
 
-    @Override
     public void setController(ChatScreenController controller) {
         this.controller = controller;
     }
     
-    @Override
     public void sendChatMessage(Message message) {
         controller.addLine(username + ": " + message);
         try {
