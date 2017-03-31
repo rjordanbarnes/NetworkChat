@@ -5,13 +5,9 @@
  */
 package networkchat;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -25,7 +21,7 @@ public class ChatServer extends ChatEntity {
 
     ServerSocket serverSocket;
     
-    // Make these an array of ChatClients
+    // Make an array of ChatClients
     ArrayList<ChatClient> clients;
 
     TextArea chatWindow;
@@ -82,45 +78,13 @@ public class ChatServer extends ChatEntity {
        });
     }
 
-    // Listens for chat and adds new messages to the screen.
-//    public void listenForChat() {
-//        
-//        final Task<Void> task = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                String output;
-//                while ((output = BR.readLine()) != null) {
-//                    final String value = output;
-//                    Platform.runLater(new Runnable() {
-//                        
-//                        // Method repeats many times a second.
-//                        @Override
-//                        public void run() {
-//                            // Client will always send their username as first message.
-//                            if (knowClientUsername) {
-//                                controller.addLine(value);
-//                            } else {
-//                                controller.addLine(value + " has connected.");
-//                                knowClientUsername = true;
-//                            }
-//                        }
-//                    });
-//                }
-//                return null;
-//            }
-//        };
-//        
-//        new Thread(task).start();
-//    }
-    
     @Override
     public void setController(ChatScreenController controller) {
         this.controller = controller;
     }
     
     @Override
-    public void sendChatMessage(String message) {
-//        controller.addLine(username + ": " + message);
+    public void sendChatMessage(Message message) {
         for (int i = 0; i < clients.size(); i++) {
             clients.get(i).sendChatMessage(message);
         }

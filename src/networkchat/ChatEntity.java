@@ -12,5 +12,5 @@ package networkchat;
 public abstract class ChatEntity {
     public abstract void setController(ChatScreenController controller);
     
-    public abstract void sendChatMessage(String message);
+    public abstract void sendChatMessage(Message message);
 }

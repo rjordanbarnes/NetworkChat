@@ -5,9 +5,8 @@
  */
 package networkchat;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -20,9 +19,8 @@ public class ChatClient extends ChatEntity {
     ChatScreenController controller;
     
     Socket socket;
-    PrintStream PS;
-    InputStreamReader IR;
-    BufferedReader BR;
+    ObjectOutputStream outStream;
+    ObjectInputStream inStream;
     
     String username;
     boolean knowServerUsername = false;
@@ -32,13 +30,10 @@ public class ChatClient extends ChatEntity {
         this.username = username;
         
         // Output
-        PS = new PrintStream(socket.getOutputStream());
+        outStream = new ObjectOutputStream(socket.getOutputStream());
         // Input
-        IR = new InputStreamReader(socket.getInputStream());
-        BR = new BufferedReader(IR);
-        
-        // Send username to server and begin listening.
-        PS.println(username);
+        inStream = new ObjectInputStream(socket.getInputStream());
+
         listenForChat();
     }
     
@@ -49,13 +44,10 @@ public class ChatClient extends ChatEntity {
         this.controller = controller;
         
         // Output
-        PS = new PrintStream(socket.getOutputStream());
+        outStream = new ObjectOutputStream(socket.getOutputStream());
         // Input
-        IR = new InputStreamReader(socket.getInputStream());
-        BR = new BufferedReader(IR);
+        inStream = new ObjectInputStream(socket.getInputStream());
         
-        // Send username to server and begin listening.
-        PS.println(username);
         listenForChat();
     }
     
@@ -64,21 +56,15 @@ public class ChatClient extends ChatEntity {
         final Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                String output;
-                while ((output = BR.readLine()) != null) {
-                    final String value = output;
+                Message input;
+                while ((input = (Message)inStream.readObject()) != null) {
+                    final Message message = input;
                     Platform.runLater(new Runnable() {
                         
                         // Method repeats many times a second.
                         @Override
                         public void run() {
-                            // Server will always send their username as first message.
-                            if (knowServerUsername) {
-                                controller.addLine(value);
-                            } else {
-                                controller.addLine("You've connected to " + value + ".");
-                                knowServerUsername = true;
-                            }
+                            handleMessage(message);
                         }
                     });
                 }
@@ -88,6 +74,15 @@ public class ChatClient extends ChatEntity {
         
         new Thread(task).start();
     }
+    
+    public void handleMessage(Message message) {
+        switch(message.getType()) {
+            case NOTIFICATION:
+                break;
+            case CHAT_MESSAGE:
+                break;
+        }
+    }
 
     @Override
     public void setController(ChatScreenController controller) {
@@ -95,8 +90,13 @@ public class ChatClient extends ChatEntity {
     }
     
     @Override
-    public void sendChatMessage(String message) {
+    public void sendChatMessage(Message message) {
         controller.addLine(username + ": " + message);
-        PS.println(username + ": " + message);
+        try {
+        outStream.writeObject(message);
+        outStream.flush();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
     }
 }
