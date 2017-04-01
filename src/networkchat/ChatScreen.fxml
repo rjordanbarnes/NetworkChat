@@ -11,10 +11,10 @@
    <children>
       <BorderPane layoutX="1.0" layoutY="-2.0" prefHeight="560.0" prefWidth="520.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <bottom>
-            <SplitPane dividerPositions="0.8938223938223938" prefHeight="19.0" prefWidth="520.0" BorderPane.alignment="CENTER">
+            <SplitPane dividerPositions="0.8756613756613757" prefHeight="19.0" prefWidth="520.0" BorderPane.alignment="CENTER">
                <items>
                   <TextField fx:id="chatBox" onKeyPressed="#keyPressChatBox" />
-                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#clickSubmitButton" prefWidth="43.0" text="Send" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#clickSubmitButton" text="Send" />
                </items>
             </SplitPane>
          </bottom>
