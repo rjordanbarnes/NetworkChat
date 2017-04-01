@@ -5,6 +5,7 @@
  */
 package networkchat;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -49,6 +50,11 @@ public class MainMenuController implements Initializable {
     // Clicking the Host toggle
     @FXML
     private void clickHostToggle(ActionEvent event) {
+        try {
+        ipBox.setText(InetAddress.getLocalHost().getHostAddress());
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         ipBox.setDisable(true);
         startButton.setText("Start");
     }
@@ -56,6 +62,7 @@ public class MainMenuController implements Initializable {
     // Clicking the Join toggle
     @FXML
     private void clickJoinToggle(ActionEvent event) {
+        ipBox.setText("");
         ipBox.setDisable(false);
         startButton.setText("Connect");
     }
