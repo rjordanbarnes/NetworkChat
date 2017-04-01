@@ -39,6 +39,9 @@ public class MainMenuController implements Initializable {
     @FXML
     private Label errorLabel;
     
+    // The Chat object
+    ChatObject chatObject;
+    
     //// EVENT METHODS ////
     
     // Main Menu
@@ -79,13 +82,13 @@ public class MainMenuController implements Initializable {
         String username = nameBox.getText();
         
         try {
-            if (startButton.getText().equals("Host")) {
-                ChatServer server = new ChatServer(port, username);
+            if (startButton.getText().equals("Start")) {
+                chatObject = new ChatServer(port);
+            } else {
+                chatObject = new ChatClient(ip, port, username);
             }
             
-            ChatClient client = new ChatClient(ip, port, username);
-            
-            transitionToChat(client);
+            transitionToChat();
         } catch(Exception e) {
             errorLabel.setText("Unable to connect");
             System.out.println(e);
@@ -93,7 +96,7 @@ public class MainMenuController implements Initializable {
     }
     
     // Sets the scene to the Chat Screen. Associates the Server/Client with the new controller.
-    public void transitionToChat(ChatClient chatClient) {
+    public void transitionToChat() {
         try {
             // Transition to new scene.
             Stage stage = (Stage)startButton.getScene().getWindow();
@@ -104,8 +107,8 @@ public class MainMenuController implements Initializable {
             stage.setScene(scene);
             
             // Associate the server or client with the new controller.
-            controller.setEntity(chatEntity);
-            chatClient.setController(controller);
+            controller.setChatObject(chatObject);
+            chatObject.setController(controller);
         } catch (Exception e) {
             System.out.println(e);
         }

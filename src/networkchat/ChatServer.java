@@ -15,30 +15,30 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
+import static networkchat.Message.messageType.CHAT_MESSAGE;
 
 /**
  *
  * @author Jordan
  */
-public class ChatServer {
+public class ChatServer extends ChatObject {
+    String username = "Server";
 
-    ServerSocket serverSocket;
-    Socket socket;
+    private ServerSocket serverSocket;
+    private Socket socket;
     
     // Make an array of ChatClients
-    ArrayList<Connection> clients;
+    private ArrayList<Connection> clients;
 
-    TextArea chatWindow;
-    ChatScreenController controller;
+    private TextArea chatWindow;
+    private ChatScreenController controller;
 
 
-    public ChatServer(int port, String username) throws Exception {
+    public ChatServer(int port) throws Exception {
         serverSocket = new ServerSocket(port);
-        socket = new Socket("localhost", port);
         
         // Creates a list of client connections and creates the first one as the server itself.
         clients = new ArrayList<Connection>();
-        clients.add(new Connection(socket));
         
         // Starts waiting for a connection.
         waitForConnection();
@@ -85,10 +85,32 @@ public class ChatServer {
     
     public void broadcastMessage(Message message) {
         for (int i = 0; i < clients.size(); i++) {
-            if (clients.get(i) != null) {
-                clients.get(i).sendMessage(message);
-            }
+            System.out.println("Broadcasting");
+            clients.get(i).sendMessage(message);
         }
+    }
+    
+    public void setController(ChatScreenController controller) {
+        this.controller = controller;
+    }
+
+    @Override
+    void sendChatMessage(String message) {
+        Message newMessage = new Message(CHAT_MESSAGE, username, message);
+        sendChatMessage(newMessage);
+    }
+
+    @Override
+    void sendChatMessage(Message message) {
+        switch(message.getType()) {
+            case NOTIFICATION:
+                controller.addLine(message.getText());
+                break;
+            case CHAT_MESSAGE:
+                controller.addLine(message.getUsername() + ": " + message.getText());
+                break;
+        }
+        broadcastMessage(message);
     }
     
     public class Connection {
@@ -118,10 +140,11 @@ public class ChatServer {
                     while ((input = (Message)inStream.readObject()) != null) {
                         final Message message = input;
                         Platform.runLater(new Runnable() {
-                            // Broadcasts the received message whenever one is received/
+                            // Broadcasts the received message whenever one is received.
                             @Override
                             public void run() {
-                                broadcastMessage(message);
+                                System.out.println("Message received.");
+                                sendChatMessage(message);
                             }
                         });
                     }

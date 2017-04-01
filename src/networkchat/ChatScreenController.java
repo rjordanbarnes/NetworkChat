@@ -25,7 +25,7 @@ public class ChatScreenController implements Initializable {
     private TextField chatBox;
     
     // The Client object
-    ChatClient chatClient;
+    ChatObject chatObject;
     
     
     //// EVENT METHODS ////
@@ -53,7 +53,7 @@ public class ChatScreenController implements Initializable {
     public void sendMessage() {
         if (chatBox.getText().trim().length() > 0) {
             String message = chatBox.getText();
-            chatClient.sendChatMessage(message);
+            chatObject.sendChatMessage(message);
             chatBox.setText("");
         }
     }
@@ -66,8 +66,8 @@ public class ChatScreenController implements Initializable {
         }
     }
     
-    public void setEntity(ChatClient chatClient) {
-        this.chatClient = chatClient;
+    public void setChatObject(ChatObject chatObject) {
+        this.chatObject = chatObject;
     }
     
     

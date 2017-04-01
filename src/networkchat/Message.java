@@ -13,21 +13,30 @@ import java.io.Serializable;
  */
 public class Message implements Serializable {
     
-    public enum messageType {
+    public static enum messageType {
         NOTIFICATION, CHAT_MESSAGE
     }
     private messageType type;
-    private int userID;
+    private String username;
     private String text;
     
-    Message(messageType type, int userID, String text) {
+    
+    Message(messageType type, String username, String text) {
         this.type = type;
-        this.userID = userID;
+        this.username = username;
         this.text = text;
     }
     
     public messageType getType() {
         return type;
+    }
+    
+    public String getUsername() {
+        return username;
+    }
+    
+    public String getText() {
+        return text;
     }
     
 }
