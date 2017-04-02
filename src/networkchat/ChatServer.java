@@ -10,7 +10,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
-import static networkchat.Message.messageType.CHAT_MESSAGE;
+import static networkchat.Message.messageType.*;
 
 public class ChatServer extends ChatObject {
     String username = "Server";
@@ -18,8 +18,9 @@ public class ChatServer extends ChatObject {
     private ServerSocket serverSocket;
     private Socket socket;
     
-    // Make an array of ChatClients
-    private ArrayList<Connection> clients;
+    // Make an array of ChatClients and track the next userID.
+    private static ArrayList<Connection> clients;
+    private static int nextUserID;
 
     private TextArea chatWindow;
     private ChatScreenController controller;
@@ -30,6 +31,7 @@ public class ChatServer extends ChatObject {
         
         // Creates a list of client connections and creates the first one as the server itself.
         clients = new ArrayList<Connection>();
+        nextUserID = 0;
         
         // Starts waiting for a connection.
         waitForConnection();
@@ -56,14 +58,16 @@ public class ChatServer extends ChatObject {
         // Start waiting for new connection.
         new Thread(task).start();
 
-        // Called once connected. Creates a new ChatClient and adds it to the clients array.
+        // Called once a client connects.
        task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
            new EventHandler<WorkerStateEvent>() {
            @Override
            public void handle(WorkerStateEvent t) {
                try {
+                   // Creates a new connection and adds it to the clients list.
                    Socket socket = task.getValue();
-                   clients.add(new Connection(socket));
+                   clients.add(new Connection(socket, nextUserID));
+                   nextUserID++;
                    
                    // Wait for another connection on a new thread.
                    waitForConnection();
@@ -74,25 +78,36 @@ public class ChatServer extends ChatObject {
        });
     }
     
-    public void broadcastMessage(Message message) {
+    // Helper method used to send a message to each client.
+    private void broadcastMessage(Message message) {
         for (int i = 0; i < clients.size(); i++) {
-            System.out.println("Broadcasting");
-            clients.get(i).sendMessage(message);
+            if (clients.get(i) != null) {
+                clients.get(i).sendMessage(message);
+            }
         }
     }
     
+    // Set client to null and inform everyone that client disconnected.
+    public void handleDisconnect(int userID, String username) {
+        Message message = new Message(NOTIFICATION, username, username + " has disconnected.");
+        sendChatMessage(message);
+        clients.set(userID, null);
+        System.out.println(clients);
+    }
+    
+    @Override
     public void setController(ChatScreenController controller) {
         this.controller = controller;
     }
 
     @Override
-    void sendChatMessage(String message) {
+    public void sendChatMessage(String message) {
         Message newMessage = new Message(CHAT_MESSAGE, username, message);
         sendChatMessage(newMessage);
     }
 
     @Override
-    void sendChatMessage(Message message) {
+    public void sendChatMessage(Message message) {
         switch(message.getType()) {
             case NOTIFICATION:
                 controller.addLine(message.getText());
@@ -104,13 +119,21 @@ public class ChatServer extends ChatObject {
         broadcastMessage(message);
     }
     
+    // An object that maintains a socket with a client. Has a userID which corresponds
+    // with the Connection's index in the server's clients array.
     public class Connection {
         private Socket socket;
         private ObjectOutputStream outStream;
         private ObjectInputStream inStream;
+        
+        // Information about the client.
+        private int userID;
+        private String username = null;
 
-        Connection(Socket socket) {
+        Connection(Socket socket, int userID) {
             this.socket = socket;
+            this.userID = userID;
+            
             try {
             // Output
             outStream = new ObjectOutputStream(socket.getOutputStream());
@@ -128,16 +151,31 @@ public class ChatServer extends ChatObject {
                 @Override
                 protected Void call() throws Exception {
                     Message input;
-                    while ((input = (Message)inStream.readObject()) != null) {
+                    while (true) {
+                        try {
+                        input = (Message)inStream.readObject();
                         final Message message = input;
+                        
+                        // Remembers the client's username.
+                        if (username == null) {
+                            username = message.getUsername();
+                        }
+                        
                         Platform.runLater(new Runnable() {
                             // Broadcasts the received message whenever one is received.
                             @Override
                             public void run() {
-                                System.out.println("Message received.");
+                                System.out.println("Test");
                                 sendChatMessage(message);
                             }
                         });
+                        } catch (Exception e) {
+                            // Client disconnected
+                            System.out.println(e);
+                            socket.close();
+                            handleDisconnect(userID, username);
+                            break;
+                        }
                     }
                     return null;
                 }

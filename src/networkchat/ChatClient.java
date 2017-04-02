@@ -5,8 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import static networkchat.Message.messageType.CHAT_MESSAGE;
-import static networkchat.Message.messageType.NOTIFICATION;
+import static networkchat.Message.messageType.*;
 
 public class ChatClient extends ChatObject {
     ChatScreenController controller;
@@ -68,6 +67,7 @@ public class ChatClient extends ChatObject {
         sendChatMessage(message);
     }
     
+    @Override
     public void setController(ChatScreenController controller) {
         this.controller = controller;
     }
