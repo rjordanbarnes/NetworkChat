@@ -94,7 +94,6 @@ public class ChatServer extends ChatObject {
         Message message = new Message(NOTIFICATION, username, username + " has disconnected.");
         sendChatMessage(message);
         clients.set(userID, null);
-        System.out.println(clients);
     }
     
     @Override
@@ -155,27 +154,36 @@ public class ChatServer extends ChatObject {
                     Message input;
                     while (true) {
                         try {
-                        input = (Message)inStream.readObject();
-                        final Message message = input;
-                        
-                        // Remembers the client's username.
-                        if (username == null) {
-                            username = message.getUsername();
-                        }
-                        
-                        Platform.runLater(new Runnable() {
-                            // Broadcasts the received message whenever one is received.
-                            @Override
-                            public void run() {
-                                System.out.println("Test");
-                                sendChatMessage(message);
+                            input = (Message)inStream.readObject();
+                            final Message message = input;
+
+                            // Remembers the client's username.
+                            if (username == null) {
+                                username = message.getUsername();
                             }
-                        });
+
+                            Platform.runLater(new Runnable() {
+                                // Broadcasts the received message whenever one is received.
+                                @Override
+                                public void run() {
+                                    sendChatMessage(message);
+                                }
+                            });
                         } catch (Exception e) {
-                            // Client disconnected
-                            System.out.println(e);
-                            socket.close();
-                            handleDisconnect(userID, username);
+                            // Client disconnected.
+                            Platform.runLater(new Runnable() {
+                                // Close the socket and handle the disconnect.
+                                @Override
+                                public void run() {
+                                    try {
+                                    socket.close();
+                                    } catch (Exception e) {
+                                        System.out.println(e);
+                                    }
+                                    handleDisconnect(userID, username);
+                                }
+                            });
+                            // Break out of the loop once a client disconnects.
                             break;
                         }
                     }

@@ -5,19 +5,23 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 
 public class ChatScreenController implements Initializable {
     
     // Chat Window
     @FXML
-    private TextArea chatWindow;
+    private TextFlow chatWindow;
     @FXML
     private TextField chatBox;
+    @FXML
+    private ScrollPane scroll;
     
     // The Chat object
     ChatObject chatObject;
@@ -40,6 +44,8 @@ public class ChatScreenController implements Initializable {
     }
     
     
+    
+    
     //// HELPER METHODS ////
     
     // Sends the message in the chat box.
@@ -53,11 +59,11 @@ public class ChatScreenController implements Initializable {
     
     // Adds the line of text to the chat window.
     public void addLine(String input) {
-        // Doesn't add a newline if the chat is empty.
-        if (chatWindow.getText().equals("")) {
-            chatWindow.appendText(input);
+        // Doesn't add a newline if there aren't any messages.
+        if (chatWindow.getChildren().size() < 1) {
+            chatWindow.getChildren().add(new Text(input));
         } else {
-            chatWindow.appendText("\n" + input);
+            chatWindow.getChildren().add(new Text("\n" + input));
         }
     }
     
@@ -71,7 +77,8 @@ public class ChatScreenController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+        // Makes the scrollbar stay at the bottom of the window.
+        scroll.vvalueProperty().bind(chatWindow.heightProperty());
     }    
     
 }

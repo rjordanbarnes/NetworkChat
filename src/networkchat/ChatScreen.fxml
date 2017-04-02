@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane id="AnchorPane" prefHeight="430.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="networkchat.ChatScreenController">
    <children>
@@ -19,7 +20,11 @@
             </SplitPane>
          </bottom>
          <center>
-            <TextArea fx:id="chatWindow" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" BorderPane.alignment="CENTER" />
+            <ScrollPane fx:id="scroll" fitToWidth="true" vvalue="1.0" BorderPane.alignment="CENTER">
+               <content>
+                  <TextFlow fx:id="chatWindow" />
+               </content>
+            </ScrollPane>
          </center>
       </BorderPane>
    </children>
