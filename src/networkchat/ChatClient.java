@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.paint.Color;
 import static networkchat.Message.messageType.*;
 
 
@@ -16,10 +17,13 @@ public class ChatClient extends ChatObject {
     ObjectInputStream inStream;
     
     String username;
+    Color usernameColor;
             
-    public ChatClient(String ip, int port, String username) throws Exception {
+    public ChatClient(String ip, int port, String username, Color usernameColor) throws Exception {
         socket = new Socket(ip, port);
         this.username = username;
+        this.usernameColor = usernameColor;
+        
         // Output
         outStream = new ObjectOutputStream(socket.getOutputStream());
         // Input
@@ -58,7 +62,7 @@ public class ChatClient extends ChatObject {
     }
     
     public void announceConnection() {
-        Message message = new Message(NOTIFICATION, username, username + " has connected.");
+        Message message = new Message(CONNECT, username, usernameColor);
         sendChatMessage(message);
     }
     
@@ -69,7 +73,7 @@ public class ChatClient extends ChatObject {
     
     @Override
     public void sendChatMessage(String message) {
-        Message newMessage = new Message(CHAT_MESSAGE, username, message);
+        Message newMessage = new Message(CHAT_MESSAGE, username, usernameColor, message);
         sendChatMessage(newMessage);
     }
     

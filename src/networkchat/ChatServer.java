@@ -10,11 +10,13 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
 import static networkchat.Message.messageType.*;
 
 
 public class ChatServer extends ChatObject {
     private String username;
+    private Color usernameColor;
 
     private ServerSocket serverSocket;
     private Socket socket;
@@ -27,9 +29,10 @@ public class ChatServer extends ChatObject {
     private ChatScreenController controller;
 
 
-    public ChatServer(int port, String username) throws Exception {
+    public ChatServer(int port, String username, Color usernameColor) throws Exception {
         serverSocket = new ServerSocket(port);
         this.username = username;
+        this.usernameColor = usernameColor;
         
         // Creates a list of client connections and creates the first one as the server itself.
         clients = new ArrayList<Connection>();
@@ -90,8 +93,8 @@ public class ChatServer extends ChatObject {
     }
     
     // Set client to null and inform everyone that client disconnected.
-    public void handleDisconnect(int userID, String username) {
-        Message message = new Message(NOTIFICATION, username, username + " has disconnected.");
+    public void handleDisconnect(int userID, String username, Color usernameColor) {
+        Message message = new Message(DISCONNECT, username, usernameColor);
         sendChatMessage(message);
         clients.set(userID, null);
     }
@@ -103,7 +106,7 @@ public class ChatServer extends ChatObject {
 
     @Override
     public void sendChatMessage(String message) {
-        Message newMessage = new Message(CHAT_MESSAGE, username, message);
+        Message newMessage = new Message(CHAT_MESSAGE, username, usernameColor, message);
         sendChatMessage(newMessage);
     }
 
@@ -123,6 +126,7 @@ public class ChatServer extends ChatObject {
         // Information about the client.
         private int userID;
         private String username = null;
+        private Color usernameColor = null;
 
         Connection(Socket socket, int userID) {
             this.socket = socket;
@@ -154,6 +158,12 @@ public class ChatServer extends ChatObject {
                             if (username == null) {
                                 username = message.getUsername();
                             }
+                            
+                            // Remembers the client's username color.
+                            if (usernameColor == null) {
+                                String rgbColor = message.getRGBColor(usernameColor);
+                                usernameColor = message.getUsernameColor(rgbColor);
+                            }
 
                             Platform.runLater(new Runnable() {
                                 // Broadcasts the received message whenever one is received.
@@ -173,7 +183,7 @@ public class ChatServer extends ChatObject {
                                     } catch (Exception e) {
                                         System.out.println(e);
                                     }
-                                    handleDisconnect(userID, username);
+                                    handleDisconnect(userID, username, usernameColor);
                                 }
                             });
                             // Break out of the loop once a client disconnects.

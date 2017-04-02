@@ -10,10 +10,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 
@@ -34,6 +36,8 @@ public class MainMenuController implements Initializable {
     private Button startButton;
     @FXML
     private Label errorLabel;
+    @FXML
+    private ColorPicker colorPicker;
     
     // The Chat object
     ChatObject chatObject;
@@ -81,12 +85,13 @@ public class MainMenuController implements Initializable {
         String ip = ipBox.getText();
         int port = Integer.parseInt(portBox.getText());
         String username = nameBox.getText();
+        Color usernameColor = colorPicker.getValue();
         
         try {
             if (startButton.getText().equals("Start")) {
-                chatObject = new ChatServer(port, username);
+                chatObject = new ChatServer(port, username, usernameColor);
             } else {
-                chatObject = new ChatClient(ip, port, username);
+                chatObject = new ChatClient(ip, port, username, usernameColor);
             }
             
             transitionToChat();
