@@ -21,12 +21,15 @@
    <children>
       <Pane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox alignment="CENTER" fillWidth="false" layoutY="11.626953125" spacing="10.0">
+            <VBox alignment="CENTER" fillWidth="false" spacing="10.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Network Chat" textAlignment="CENTER" wrappingWidth="250.0">
                      <font>
                         <Font size="30.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
                   </Text>
                   <VBox spacing="3.0">
                      <children>
