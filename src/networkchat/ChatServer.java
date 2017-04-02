@@ -12,8 +12,9 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import static networkchat.Message.messageType.*;
 
+
 public class ChatServer extends ChatObject {
-    String username = "Server";
+    private String username;
 
     private ServerSocket serverSocket;
     private Socket socket;
@@ -26,8 +27,9 @@ public class ChatServer extends ChatObject {
     private ChatScreenController controller;
 
 
-    public ChatServer(int port) throws Exception {
+    public ChatServer(int port, String username) throws Exception {
         serverSocket = new ServerSocket(port);
+        this.username = username;
         
         // Creates a list of client connections and creates the first one as the server itself.
         clients = new ArrayList<Connection>();

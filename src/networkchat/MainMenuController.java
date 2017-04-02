@@ -85,7 +85,7 @@ public class MainMenuController implements Initializable {
         
         try {
             if (startButton.getText().equals("Start")) {
-                chatObject = new ChatServer(port);
+                chatObject = new ChatServer(port, username);
             } else {
                 chatObject = new ChatClient(ip, port, username);
             }

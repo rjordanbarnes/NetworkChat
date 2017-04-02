@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import static networkchat.Message.messageType.*;
 
+
 public class ChatClient extends ChatObject {
     ChatScreenController controller;
     
