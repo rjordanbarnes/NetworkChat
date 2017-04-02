@@ -1,6 +1,7 @@
 package networkchat;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,13 +58,16 @@ public class ChatScreenController implements Initializable {
         }
     }
     
-    // Adds the line of text to the chat window.
-    public void addLine(String input) {
-        // Doesn't add a newline if there aren't any messages.
-        if (chatWindow.getChildren().size() < 1) {
-            chatWindow.getChildren().add(new Text(input));
-        } else {
-            chatWindow.getChildren().add(new Text("\n" + input));
+    // Receives an array of Text objects to add to the chat window.
+    public void addLine(ArrayList<Text> input) {
+        // Adds a new line if there is already text in the window.
+        if (chatWindow.getChildren().size() > 0) {
+            chatWindow.getChildren().add(new Text("\n"));
+        }
+        
+        // Adds each Text object to the chat window.
+        for (int i = 0; i < input.size(); i++) {
+            chatWindow.getChildren().add(input.get(i));
         }
     }
     

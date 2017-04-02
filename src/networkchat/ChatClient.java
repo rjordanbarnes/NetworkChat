@@ -54,14 +54,7 @@ public class ChatClient extends ChatObject {
     }
     
     public void handleMessage(Message message) {
-        switch(message.getType()) {
-            case NOTIFICATION:
-                controller.addLine(message.getText());
-                break;
-            case CHAT_MESSAGE:
-                controller.addLine(message.getUsername() + ": " + message.getText());
-                break;
-        }
+        controller.addLine(message.getMessageForDisplay());
     }
     
     public void announceConnection() {

@@ -109,14 +109,7 @@ public class ChatServer extends ChatObject {
 
     @Override
     public void sendChatMessage(Message message) {
-        switch(message.getType()) {
-            case NOTIFICATION:
-                controller.addLine(message.getText());
-                break;
-            case CHAT_MESSAGE:
-                controller.addLine(message.getUsername() + ": " + message.getText());
-                break;
-        }
+        controller.addLine(message.getMessageForDisplay());
         broadcastMessage(message);
     }
     
