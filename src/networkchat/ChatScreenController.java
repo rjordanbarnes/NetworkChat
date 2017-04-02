@@ -19,13 +19,11 @@ public class ChatScreenController implements Initializable {
     @FXML
     private TextField chatBox;
     
-    // The Client object
+    // The Chat object
     ChatObject chatObject;
     
     
     //// EVENT METHODS ////
-    
-    // Chat Window
     
     // Clicking the Submit Button
     @FXML
@@ -53,7 +51,9 @@ public class ChatScreenController implements Initializable {
         }
     }
     
+    // Adds the line of text to the chat window.
     public void addLine(String input) {
+        // Doesn't add a newline if the chat is empty.
         if (chatWindow.getText().equals("")) {
             chatWindow.appendText(input);
         } else {
@@ -61,6 +61,7 @@ public class ChatScreenController implements Initializable {
         }
     }
     
+    // Tells the controller what chat object it's connected to.
     public void setChatObject(ChatObject chatObject) {
         this.chatObject = chatObject;
     }

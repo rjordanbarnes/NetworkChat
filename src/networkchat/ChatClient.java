@@ -24,6 +24,7 @@ public class ChatClient extends ChatObject {
         outStream = new ObjectOutputStream(socket.getOutputStream());
         // Input
         inStream = new ObjectInputStream(socket.getInputStream());
+        
         announceConnection();
         listen();
     }

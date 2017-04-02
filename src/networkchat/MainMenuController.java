@@ -38,9 +38,8 @@ public class MainMenuController implements Initializable {
     // The Chat object
     ChatObject chatObject;
     
-    //// EVENT METHODS ////
     
-    // Main Menu
+    //// EVENT METHODS ////
     
     // Clicking the Host toggle
     @FXML
