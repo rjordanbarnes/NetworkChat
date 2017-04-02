@@ -65,11 +65,15 @@ public class Message implements Serializable {
                 break;
             case DISCONNECT:
                 fullMessage.add(usernameText);
-                fullMessage.add(new Text (" has disconnected."));
+                Text disconnectNotice = new Text(" has disconnected.");
+                disconnectNotice.setFill(Color.web(usernameColor));
+                fullMessage.add(disconnectNotice);
                 break;
             case CONNECT:
                 fullMessage.add(usernameText);
-                fullMessage.add(new Text (" has connected."));
+                Text connectNotice = new Text(" has connected.");
+                connectNotice.setFill(Color.web(usernameColor));
+                fullMessage.add(connectNotice);
                 break;
             case CHAT_MESSAGE:
                 fullMessage.add(usernameText);
