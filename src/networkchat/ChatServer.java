@@ -9,17 +9,16 @@ import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
 import static networkchat.Message.messageType.*;
 
 
 public class ChatServer extends ChatObject {
-    private String username;
-    private Color usernameColor;
+    private final String username;
+    private final Color usernameColor;
 
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
     private Socket socket;
     
     // Make an array of ChatClients and track the next userID.
@@ -36,7 +35,7 @@ public class ChatServer extends ChatObject {
         this.usernameColor = usernameColor;
         
         // Creates a list of client connections and creates the first one as the server itself.
-        clients = new ArrayList<Connection>();
+        clients = new ArrayList<>();
         nextUserID = 0;
         
         // Starts waiting for a connection.
@@ -44,7 +43,7 @@ public class ChatServer extends ChatObject {
     }
 
     // Waits for a connection to be made.
-    public void waitForConnection() throws Exception {
+    public final void waitForConnection() throws Exception {
         // Continuously waits for new connections with new sockets.
         final Task<Socket> task = new Task<Socket>() {
             @Override

@@ -34,7 +34,7 @@ public class ChatClient extends ChatObject {
         listen();
     }
     
-    public void listen() {
+    public final void listen() {
         // Listens for chat and add it to the screen.
         final Task<Void> task = new Task<Void>() {
             @Override
@@ -58,7 +58,7 @@ public class ChatClient extends ChatObject {
         controller.addLine(message.getMessageForDisplay());
     }
     
-    public void announceConnection() {
+    public final void announceConnection() {
         Message message = new Message(CONNECT, username, usernameColor);
         sendChatMessage(message);
     }

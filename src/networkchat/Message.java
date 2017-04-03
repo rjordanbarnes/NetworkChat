@@ -49,7 +49,7 @@ public class Message implements Serializable {
         return Color.web(usernameColor);
     }
     
-    public String getRGBColor(Color color) {
+    public final String getRGBColor(Color color) {
         return String.valueOf(color);
     }
     
