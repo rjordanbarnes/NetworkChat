@@ -55,7 +55,7 @@ public class Message implements Serializable {
     
     // Builds an array of Text objects for display in the chat window.
     public ArrayList<Text> getMessageForDisplay() {
-        ArrayList<Text> fullMessage = new ArrayList<Text>();
+        ArrayList<Text> fullMessage = new ArrayList<>();
         Text usernameText = new Text(username);
         usernameText.setFill(Color.web(usernameColor));
         

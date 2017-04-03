@@ -1,7 +1,9 @@
 package networkchat;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,7 +52,7 @@ public class MainMenuController implements Initializable {
     private void clickHostToggle(ActionEvent event) {
         try {
         ipBox.setText(InetAddress.getLocalHost().getHostAddress());
-        } catch (Exception e) {
+        } catch (UnknownHostException e) {
             System.out.println(e);
         }
         ipBox.setDisable(true);
@@ -115,7 +117,7 @@ public class MainMenuController implements Initializable {
             // Associate the server or client with the new controller.
             controller.setChatObject(chatObject);
             chatObject.setController(controller);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
     }

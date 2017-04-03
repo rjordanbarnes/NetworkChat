@@ -25,14 +25,12 @@ public class NetworkChat extends Application {
         root.requestFocus();
         
         // Make sure program and threads close entirely when X is pressed.
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent e){
-                try {
-                    Platform.exit();
-                    System.exit(0);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+        stage.setOnCloseRequest((WindowEvent e) -> {
+            try {
+                Platform.exit();
+                System.exit(0);
+            } catch (Exception e1) {
+                System.out.println(e1);
             }
         });
     }

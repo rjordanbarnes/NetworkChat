@@ -1,5 +1,6 @@
 package networkchat;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -41,13 +42,9 @@ public class ChatClient extends ChatObject {
                 Message input;
                 while ((input = (Message)inStream.readObject()) != null) {
                     final Message message = input;
-                    Platform.runLater(new Runnable() {
-                        
-                        // Method repeats many times a second.
-                        @Override
-                        public void run() {
-                            handleMessage(message);
-                        }
+                    Platform.runLater(() -> {
+                        // Handles any new messages received.
+                        handleMessage(message);
                     });
                 }
                 return null;
@@ -82,7 +79,7 @@ public class ChatClient extends ChatObject {
         try {
         outStream.writeObject(message);
         outStream.flush();
-        } catch(Exception e) {
+        } catch(IOException e) {
             System.out.println(e);
         }
     }

@@ -1,5 +1,6 @@
 package networkchat;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
@@ -52,7 +53,7 @@ public class ChatServer extends ChatObject {
                     Socket socket = null;
                     try {
                         socket = serverSocket.accept();
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                         System.out.println(e);
                     }
 
@@ -64,23 +65,18 @@ public class ChatServer extends ChatObject {
         new Thread(task).start();
 
         // Called once a client connects.
-       task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-           new EventHandler<WorkerStateEvent>() {
-           @Override
-           public void handle(WorkerStateEvent t) {
-               try {
-                   // Creates a new connection and adds it to the clients list.
-                   Socket socket = task.getValue();
-                   clients.add(new Connection(socket, nextUserID));
-                   nextUserID++;
-                   
-                   // Wait for another connection on a new thread.
-                   waitForConnection();
-               } catch (Exception e) {
-                   System.out.println(e);
-               }
-           }
-       });
+       task.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (WorkerStateEvent t) -> {
+            try {
+                // Creates a new connection and adds it to the clients list.
+                Socket socket1 = task.getValue();
+                clients.add(new Connection(socket1, nextUserID));
+                nextUserID++;
+                // Wait for another connection on a new thread.
+                waitForConnection();
+            }catch (Exception e) {
+                System.out.println(e);
+            }
+        });
     }
     
     // Helper method used to send a message to each client.
@@ -138,7 +134,7 @@ public class ChatServer extends ChatObject {
             // Input
             inStream = new ObjectInputStream(socket.getInputStream());
             listen();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 System.out.println(e);
             }
         }
@@ -165,26 +161,20 @@ public class ChatServer extends ChatObject {
                                 usernameColor = message.getUsernameColor(rgbColor);
                             }
 
-                            Platform.runLater(new Runnable() {
+                            Platform.runLater(() -> {
                                 // Broadcasts the received message whenever one is received.
-                                @Override
-                                public void run() {
-                                    sendChatMessage(message);
-                                }
+                                sendChatMessage(message);
                             });
-                        } catch (Exception e) {
+                        } catch (IOException | ClassNotFoundException e) {
                             // Client disconnected.
-                            Platform.runLater(new Runnable() {
+                            Platform.runLater(() -> {
                                 // Close the socket and handle the disconnect.
-                                @Override
-                                public void run() {
-                                    try {
+                                try {
                                     socket.close();
-                                    } catch (Exception e) {
-                                        System.out.println(e);
-                                    }
-                                    handleDisconnect(userID, username, usernameColor);
+                                } catch (IOException e1) {
+                                    System.out.println(e1);
                                 }
+                                handleDisconnect(userID, username, usernameColor);
                             });
                             // Break out of the loop once a client disconnects.
                             break;
@@ -202,7 +192,7 @@ public class ChatServer extends ChatObject {
             try {
             outStream.writeObject(message);
             outStream.flush();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 System.out.println(e);
             }
         }
