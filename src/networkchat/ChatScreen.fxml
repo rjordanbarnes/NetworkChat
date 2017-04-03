@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
 <AnchorPane id="AnchorPane" prefHeight="430.0" prefWidth="380.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="networkchat.ChatScreenController">
@@ -26,6 +27,17 @@
                </content>
             </ScrollPane>
          </center>
+         <right>
+            <ScrollPane BorderPane.alignment="CENTER">
+               <content>
+                  <TextFlow fx:id="userList">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Users" />
+                     </children>
+                  </TextFlow>
+               </content>
+            </ScrollPane>
+         </right>
       </BorderPane>
    </children>
 </AnchorPane>

@@ -10,6 +10,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
@@ -23,9 +24,14 @@ public class ChatScreenController implements Initializable {
     private TextField chatBox;
     @FXML
     private ScrollPane scroll;
+    @FXML
+    private TextFlow userList;
     
     // The Chat object
     ChatObject chatObject;
+    
+    // The user list
+    ArrayList<Text> users = new ArrayList<>();
     
     
     //// EVENT METHODS ////
@@ -43,7 +49,6 @@ public class ChatScreenController implements Initializable {
             sendMessage();
         }
     }
-    
     
     
     
@@ -76,6 +81,44 @@ public class ChatScreenController implements Initializable {
         this.chatObject = chatObject;
     }
     
+    public void createUserList(ArrayList<User> users) {
+        // Create Text objects for users
+        for (int i = 0; i < users.size(); i++) {
+            Text user = new Text(users.get(i).username);
+            user.setFill(Color.web(users.get(i).usernameColor));
+            this.users.add(i, user);
+        }
+        
+        refreshUserList();
+    }
+    
+    public void addUser(String username, String usernameColor) {
+        Text user = new Text(username);
+        user.setFill(Color.web(usernameColor));
+        users.add(user);
+        
+        refreshUserList();
+    }
+    
+    public void removeUser(String username) {
+        for (int i = users.size() - 1; i >= 0; i--) {
+            if (users.get(i).getText().equals(username)) {
+                users.remove(i);
+                break;
+            }
+        }
+        
+        refreshUserList();
+    }
+    
+    public void refreshUserList() {
+        userList.getChildren().clear();
+        userList.getChildren().add(new Text("Users [" + users.size() + "]"));
+        for (int i = 0; i < users.size(); i++) {
+            userList.getChildren().add(new Text("\n"));
+            userList.getChildren().add(users.get(i));
+        }
+    }
     
     //// INITIALIZE METHOD ////
     

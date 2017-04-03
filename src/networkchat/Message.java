@@ -10,53 +10,56 @@ import static networkchat.Message.messageType.*;
 public class Message implements Serializable {
     
     public static enum messageType {
-        NOTIFICATION, DISCONNECT, CONNECT, CHAT_MESSAGE
+        NOTIFICATION, DISCONNECT, CONNECT, CHAT_MESSAGE, USERLIST
     }
     private messageType type;
-    private String username;
-    private String usernameColor;
+    private User user;
     private String text;
+    private ArrayList<User> users;
     
     Message(messageType type, String username, Color usernameColor, String text) {
         this.type = type;
-        this.username = username;
+        this.user = new User(username, usernameColor);
         this.text = text;
-        this.usernameColor = getRGBColor(usernameColor);
     }
     
     Message(messageType type, String username, Color usernameColor) {
         this(type, username, usernameColor, "");
     }
     
+    Message(messageType type, User user) {
+        this(type, user.username, Color.web(user.usernameColor), "");
+    }
+    
+    Message(messageType type, ArrayList<User> users) {
+        this(type, "", Color.BLACK, "");
+        this.users = users;
+    }
+    
+    
     public messageType getType() {
         return type;
     }
     
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
     
     public String getText() {
         return text;
     }
     
-    public String getUsernameColor() {
-        return usernameColor;
+    public ArrayList<User> getUsers() {
+        return users;
     }
     
-    public Color getUsernameColor(String color) {
-        return Color.web(usernameColor);
-    }
     
-    public final String getRGBColor(Color color) {
-        return String.valueOf(color);
-    }
     
     // Builds an array of Text objects for display in the chat window.
     public ArrayList<Text> getMessageForDisplay() {
         ArrayList<Text> fullMessage = new ArrayList<>();
-        Text usernameText = new Text(username);
-        usernameText.setFill(Color.web(usernameColor));
+        Text usernameText = new Text(user.username);
+        usernameText.setFill(Color.web(user.usernameColor));
         
         switch(type) {
             case NOTIFICATION:
@@ -65,13 +68,13 @@ public class Message implements Serializable {
             case DISCONNECT:
                 fullMessage.add(usernameText);
                 Text disconnectNotice = new Text(" has disconnected.");
-                disconnectNotice.setFill(Color.web(usernameColor));
+                disconnectNotice.setFill(Color.web(user.usernameColor));
                 fullMessage.add(disconnectNotice);
                 break;
             case CONNECT:
                 fullMessage.add(usernameText);
                 Text connectNotice = new Text(" has connected.");
-                connectNotice.setFill(Color.web(usernameColor));
+                connectNotice.setFill(Color.web(user.usernameColor));
                 fullMessage.add(connectNotice);
                 break;
             case CHAT_MESSAGE:

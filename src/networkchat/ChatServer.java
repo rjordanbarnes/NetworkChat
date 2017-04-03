@@ -87,8 +87,8 @@ public class ChatServer extends ChatObject {
     }
     
     // Set client to null and inform everyone that client disconnected.
-    public void handleDisconnect(int userID, String username, Color usernameColor) {
-        Message message = new Message(DISCONNECT, username, usernameColor);
+    public void handleDisconnect(int userID, User user) {
+        Message message = new Message(DISCONNECT, user);
         sendChatMessage(message);
         clients.set(userID, null);
     }
@@ -119,8 +119,7 @@ public class ChatServer extends ChatObject {
         
         // Information about the client.
         private int userID;
-        private String username = null;
-        private Color usernameColor = null;
+        private User user = null;
 
         Connection(Socket socket, int userID) {
             this.socket = socket;
@@ -131,6 +130,8 @@ public class ChatServer extends ChatObject {
             outStream = new ObjectOutputStream(socket.getOutputStream());
             // Input
             inStream = new ObjectInputStream(socket.getInputStream());
+            
+            sendUserList();
             listen();
             } catch (IOException e) {
                 System.out.println(e);
@@ -148,17 +149,11 @@ public class ChatServer extends ChatObject {
                             input = (Message)inStream.readObject();
                             final Message message = input;
 
-                            // Remembers the client's username.
-                            if (username == null) {
-                                username = message.getUsername();
+                            // Remembers the user.
+                            if (user == null) {
+                                user = message.getUser();
                             }
                             
-                            // Remembers the client's username color.
-                            if (usernameColor == null) {
-                                String rgbColor = message.getRGBColor(usernameColor);
-                                usernameColor = message.getUsernameColor(rgbColor);
-                            }
-
                             Platform.runLater(() -> {
                                 // Broadcasts the received message whenever one is received.
                                 sendChatMessage(message);
@@ -172,7 +167,7 @@ public class ChatServer extends ChatObject {
                                 } catch (IOException e1) {
                                     System.out.println(e1);
                                 }
-                                handleDisconnect(userID, username, usernameColor);
+                                handleDisconnect(userID, user);
                             });
                             // Break out of the loop once a client disconnects.
                             break;
@@ -193,6 +188,26 @@ public class ChatServer extends ChatObject {
             } catch (IOException e) {
                 System.out.println(e);
             }
+        }
+
+        // Sends the current user list to the client.
+        private void sendUserList() {
+            ArrayList<User> users = new ArrayList<>();
+            
+            for (int i = 0; i < clients.size(); i++) {
+                if (clients.get(i) != null) {
+                    users.add(clients.get(i).user);
+                }
+            }
+            sendMessage(new Message(USERLIST, users));
+        }
+
+        public String getUsername() {
+            return username;
+        }
+        
+        public Color getUsernameColor() {
+            return usernameColor;
         }
     }
 }

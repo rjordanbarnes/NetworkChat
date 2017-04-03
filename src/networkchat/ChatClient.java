@@ -54,8 +54,18 @@ public class ChatClient extends ChatObject {
         new Thread(task).start();
     }
     
+    // Modifies UI based on incoming messages.
     public void handleMessage(Message message) {
         controller.addLine(message.getMessageForDisplay());
+        
+        if (message.getType() == CONNECT) {
+            controller.addUser(message.getUser().username, message.getUser().usernameColor);
+            System.out.println("Add");
+        } else if (message.getType() == DISCONNECT) {
+            controller.removeUser(message.getUser().username);
+        } else if (message.getType() == USERLIST) {
+            controller.createUserList(message.getUsers());
+        }
     }
     
     public final void announceConnection() {
