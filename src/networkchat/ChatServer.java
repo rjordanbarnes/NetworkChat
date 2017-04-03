@@ -28,7 +28,6 @@ public class ChatServer extends ChatObject {
     private TextArea chatWindow;
     private ChatScreenController controller;
 
-
     public ChatServer(int port, String username, Color usernameColor) throws Exception {
         serverSocket = new ServerSocket(port);
         this.username = username;
@@ -167,7 +166,7 @@ public class ChatServer extends ChatObject {
                         } catch (IOException | ClassNotFoundException e) {
                             // Client disconnected.
                             Platform.runLater(() -> {
-                                // Close the socket and handle the disconnect.
+                                // Close the socket and let the server handle the disconnect.
                                 try {
                                     socket.close();
                                 } catch (IOException e1) {

@@ -17,7 +17,6 @@ public class Message implements Serializable {
     private String usernameColor;
     private String text;
     
-    
     Message(messageType type, String username, Color usernameColor, String text) {
         this.type = type;
         this.username = username;
